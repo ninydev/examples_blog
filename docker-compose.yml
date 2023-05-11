@@ -1,0 +1,56 @@
+version: '3'
+services:
+
+    front.vue:
+        build: ./front_vue
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        volumes:
+            - ./front_vue:/usr/src/app
+        command: sh -c " npm install && npm start "
+        networks:
+            - lab325_network
+
+    socket.jonny:
+        build: ./sockets
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        volumes:
+            - ./sockets:/usr/src/app
+        command: sh -c " npm install && npm start "
+        networks:
+            - lab325_network
+        depends_on:
+            - redis.socket
+            - redis.cache
+        environment:
+            - NAME=Jonny
+
+    redis.socket:
+        image: 'redis:alpine'
+        volumes:
+            - './volumes/redis/socket:/data'
+        networks:
+            - lab325_network
+
+    redis.cache:
+        image: 'redis:alpine'
+        volumes:
+            - './volumes/redis/cache:/data'
+        networks:
+            - lab325_network
+
+    nginx:
+        image: nginx:alpine
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf:ro
+        networks:
+            - lab325_network
+        depends_on:
+            - front.vue
+            - socket.jonny
+        ports:
+            - "80:80"
+networks:
+    lab325_network:
+        driver: bridge
