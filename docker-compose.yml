@@ -25,6 +25,8 @@ services:
             - redis.cache
         environment:
             - NAME=Jonny
+        env_file:
+            - .env
 
     redis.socket:
         image: 'redis:alpine'
@@ -39,6 +41,17 @@ services:
             - './volumes/redis/cache:/data'
         networks:
             - lab325_network
+
+    storage:
+        image: minio/minio:latest
+        ports:
+            - "9000:9000"
+            - "38755:38755"
+        volumes:
+            - ./volumes/storage:/data
+        env_file:
+            - .env
+        command: server /data
 
     nginx:
         image: nginx:alpine
