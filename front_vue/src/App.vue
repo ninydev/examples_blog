@@ -1,5 +1,10 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
+
+import {useSocketStore} from "@/stores/socket";
+const socket = useSocketStore()
+socket.connect()
 </script>
 
 <template>

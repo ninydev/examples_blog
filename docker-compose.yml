@@ -28,8 +28,25 @@ services:
         env_file:
             - .env
 
+    notifications:
+        build: ./notifications
+        volumes:
+            - ./notifications:/usr/src/app
+        command: sh -c " npm install && npm start "
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        networks:
+            - lab325_network
+        depends_on:
+            - redis.socket
+            - redis.cache
+        env_file:
+            - .env
+
     redis.socket:
         image: 'redis:alpine'
+        ports:
+            -   "3079:6379"
         volumes:
             - './volumes/redis/socket:/data'
         extra_hosts:
