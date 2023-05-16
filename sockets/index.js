@@ -1,8 +1,14 @@
+/**
+ * Установочные параметры для сокетов
+ */
 const port = process.env.PORT || 3000;
 const serverName = process.env.NAME || 'Node Socket';
 const redisSocketHost = process.env.REDIS_SOCKET_HOST || 'redis.socket';
 const redisSocketPort = process.env.REDIS_SOCKET_PORT || 6379;
 
+/**
+ * Подключение необходимых модулей
+ */
 const { Server } = require("socket.io");
 const { createClient } = require("redis");
 const { createAdapter } = require("@socket.io/redis-adapter");
